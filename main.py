@@ -9,7 +9,7 @@ ON_COOLDOWN = {}
 XP_COUNT = {}
 
 points_per_msg = 10
-upload_interval 300
+upload_interval = 300
 points_award_cooldown = 15
 
 
@@ -54,7 +54,7 @@ async def check_command(ctx):
 
 @tasks.loop(seconds=1)
 async def update_cooldown():
-    log(ON_COOLDOWN,XP_COUNT)
+    log(f"{ON_COOLDOWN}\t\t{XP_COUNT}")
     cool_over = []
     for i in ON_COOLDOWN:
         ON_COOLDOWN[i] = ON_COOLDOWN[i]-1
@@ -64,7 +64,7 @@ async def update_cooldown():
         log(f"Cooldown Over for {i}")
         del ON_COOLDOWN[i]
 
-@tasks.loop(minutes=upload_interval)
+@tasks.loop(seconds=upload_interval)
 async def upload_data():
     global XP_COUNT
     if XP_COUNT != {}:
