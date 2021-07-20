@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "growtopicsmp",
+  "private_key_id": "b17ba1ea61b15377ea623ba684766a90d22f5bc2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQD27gDIsTHHziFj\nZxD7sQTMPkJMJobIfT7Is/3/vRCPXa08eTYngrYTbR6d0Po9UjWkIPgGQsG+eXX2\nlICSpf7wtEzJTs0KKeWmtZ40s8gyOygN9JzjU1xc7eHlb8OPMljcv31xFKyGzlwZ\nCrlCM97nwrUuhZ194wSFU1IQVQpHgxsZhYeiY9voP0WQU6QupkyeeijsG6nb0c3e\nHvZcrzrHNjzVSL8WICckIAkBA6NAVs5aTgHYwiNFyOh0oDNUB0RnOJ6TIrW5Epo0\ngsY1ZH/AYlD0jl1HOOeO93wYSusJS/daKpfljmW61TsyWtEFCqQUV3hdPF1MXEqu\nYv1Xk26JAgMBAAECggEADvEZ77WhMIOi9j6KAuDpob5GtBBEvvmtLzyNAHOdU+o0\nOGDmoP9s1cIYRIPHu1GFLhhR9HcHqDygoboctEMCfpLlGUKrxOisx9Nc7mLOmL4x\npJ6KUSB930sEYft1rELnU6bsB/KwpJD0y7h1ZgcjftyuVVFVKq/uWcRP8UMOwILq\nVf1uLYwIBOlv3She+o2KF4hjJBIxbpQvbKmfi68yHfotV61o7HuFxKOaCBfOZOSa\nBvr/MOc3Foca/c8Qy0q6e9OU+Wg9g3cEaU8+6JknNzPHyswliSvTyVgO0u091/5k\nCi6i/Q0DLfkIhwXGmtFbo/citihhg/qTXmqkGF1wTQKBgQD/fFw7MxoMwALacjFO\n81Z1wIH26dfrma9lvjFzly7NnHtmRq1C4ub4L8i7NfRKX/R9UkXwqbgd6QKToaIV\nB20UK6ODIcpIsayn99IwT/Tzkfs51gh1Gm+uJQ6XQpssqccTmdWP3tBCMryeExQK\nJYFVxnUXZRo62xuUGpny8y6GQwKBgQD3bTv3I4KEBRbRw2ui1KMuGLRONf5xtj+2\nzfDlsQh/bK9kMrhHz4XmiS3Lm3j4IRxNUHApCDzIVRSPFDtMWKPi0W4FlMWSCZSP\n8XEdYkIBhISiik+S6+hBiVYLRFP2aZML3fC5jHorhAl5zrcEdmbTb9qstx8UHBQa\n+x1AKlNZQwKBgBriCxJvnh4ZVjOGMIoOMNrTFtnUYVP5J+ucx7dSASrBfHqWlUSk\ne4lB/e01EC+DSUamkZVxRl5fVlYSe+uajG/C58G0nIRprbE+8m8C+tNmWPkM/HbW\nAUphu9dOuuVIOBpn5YDuARv2GsLHXyRyLdnIuCluCgSHaa973RcjX5HhAoGAF9V8\n5kSUaPU4ioJBlxDWmzUkATiwRvHgV1KlNusDv4qPpp5AJCK4akmikK9sSrKd0FDE\nTR+PA1k2vsWbJLKRLuMvrvfyxCuKFQeT9tmlNBI42JNsMOHqoI2DLViqodzvnkAF\n1UnT5uc0JnikJpjlNM7ciLCnHL/LrAGugqTRHJMCgYB0wWOvUPYyVK6hV3Nbq1RS\nfmFjK4/a5Vqbh94U5t5+P0BfKLSykC686bzs+CooX/jVhpLjHeCp6NtD4+VbWJ2B\nU4YbDtZthwHbdTzCcJoh4zlc1e0mwirR3Zy42tbJPMX75k8+boGhFV658/wQYoZK\nloe2Ejj1Zi7unpCEowOKBw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "growtopialeveling@growtopicsmp.iam.gserviceaccount.com",
+  "client_id": "111816478478839833818",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/growtopialeveling%40growtopicsmp.iam.gserviceaccount.com"
+}
