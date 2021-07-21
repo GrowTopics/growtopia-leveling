@@ -119,4 +119,4 @@ async def upload_data():
 async def check_ready():
     await client.wait_until_ready()
 
-client.run(os.getenv('token'))
+client.run("ODY2ODgwOTg1MjE4OTQwOTI4.YPY_1A.-tHP5DbgLlJeUOQ3lVxVbElXZd0")#os.getenv('token'))
