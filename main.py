@@ -51,7 +51,7 @@ async def on_message(message):
                     description = "Participating in conversations help you level up.\nSpam Detection has been enabled - Don't try it",
                     colour = discord.Colour.green()
                 )
-#                await message.channel.send(embed=e)
+                await message.author.send(embed=e)
                 USERS.append(str(message.author.id))
 
             ON_COOLDOWN[str(message.author.id)] = points_award_cooldown
