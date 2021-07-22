@@ -49,7 +49,7 @@ async def on_message(message):
 
             if str(message.author.id) not in USERS:
                 e = discord.Embed(
-                    title = f"Welcome {client.get_user(message.author.name)}!!!",
+                    title = f"Welcome to Growtopia Leveling!!!",
                     description = "Participating in conversations help you level up.\nSpam Detection has been enabled - Don't try it",
                     colour = discord.Colour.green()
                 )
