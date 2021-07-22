@@ -49,7 +49,7 @@ async def on_message(message):
 
             if str(message.author.id) not in USERS:
                 e = discord.Embed(
-                    title = f"Welcome to Growtopia Leveling!!!",
+                    title = f"Welcome {message.author.name}!",
                     description = "Participating in conversations help you level up.\nSpam Detection has been enabled - Don't try it",
                     colour = discord.Colour.green()
                 )
@@ -113,7 +113,7 @@ async def upload_data():
         log(f"Fetched Information {code_fetch}!!!")
         XP_COUNT = {}
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
-        await client.get_channel(856225104161275964).send(embed=e)
+        await client.get_channel(867533836803244042).send(embed=e)
 
 @update_cooldown.before_loop
 async def check_ready():
