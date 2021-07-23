@@ -16,6 +16,7 @@ SPREAD = google_client.open_by_key("1KTrNOXZXdbOg9rALPxxkys5jEDU-cOuzOB_jtJEDpbg
 points_per_msg = random.choice(list(range(5,15)))
 upload_interval = 10    #Minutes
 points_award_cooldown = 10
+xp_levelup = list(map(int,SPREAD.worksheet("Settings").row_values(2)))
 
 TO_Next = upload_interval*60
 development = False     #Set to False when pushing
@@ -26,8 +27,8 @@ def log(text=""):
 
 @client.event
 async def on_ready():
-    global USERS
-    print(f"Bot Already Online...Running on {socket.gethostname()}")
+    global USERS,RAW
+    log(f"Bot Already Online...Running on {socket.gethostname()}")
     if development == False:
         await client.get_channel(847602473627025448).send(embed=discord.Embed(
             title = "Bot Status",
@@ -35,16 +36,20 @@ async def on_ready():
             colour = discord.Colour(0xd81b60)
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
-    USERS = SPREAD.worksheet("Leveling").col_values(1)
+    RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
+    for i in range(len(RAW)):
+        RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
+    USERS = [i[0] for i in RAW]
     log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
 
 @client.event
 async def on_message(message):
+    global USERS,RAW
     if message.content.startswith("<!"):
         await client.process_commands(message)
     else:
         if str(message.author.id) not in ON_COOLDOWN and not(message.author.bot) and len(message.content.split(" "))>1:
-            print(message.author.name)
+
             if str(message.author.id) not in USERS:
                 e = discord.Embed(
                     title = f"Welcome {message.author.name}!",
@@ -52,13 +57,36 @@ async def on_message(message):
                     colour = discord.Colour.green()
                 )
                 await message.author.send(embed=e)
+                timenow = datetime.datetime.now().strftime("%c")
+                new_user = [
+                    gspread.models.Cell(row=len(USERS)+1,col=1,value=message.author.id),
+                    gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
+                    gspread.models.Cell(row=len(USERS)+1,col=3,value=1),
+                    gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
+                ]
+                RAW.append([str(message.author.id),0,1,timenow])
+                SPREAD.worksheet("Leveling").update_cells(new_user)
                 USERS.append(str(message.author.id))
 
             ON_COOLDOWN[str(message.author.id)] = points_award_cooldown
+
+            assign_points = points_per_msg
             if str(message.author.id) not in XP_COUNT:
-                XP_COUNT[str(message.author.id)] = points_per_msg
+                XP_COUNT[str(message.author.id)] = assign_points
             else:
-                XP_COUNT[str(message.author.id)] = XP_COUNT[str(message.author.id)] + 10
+                XP_COUNT[str(message.author.id)] = XP_COUNT[str(message.author.id)] + assign_points
+            RAW[USERS.index(str(message.author.id))][1] = RAW[USERS.index(str(message.author.id))][1] + assign_points
+
+            #Check if Level Up
+
+            if RAW[USERS.index(str(message.author.id))][1] >= xp_levelup[RAW[USERS.index(str(message.author.id))][2]+1]:
+                RAW[USERS.index(str(message.author.id))][2] = RAW[USERS.index(str(message.author.id))][2]+1
+                e = discord.Embed(
+                    title = f"**Congratulations** {message.author.name}!\nYou have Reached **LEVEL** `{RAW[USERS.index(str(message.author.id))][2]}`\n🥳 🥳 🥳",
+                    colour = discord.Colour.teal()
+                )
+                await message.channel.send(embed=e)
+                SPREAD.worksheet("Leveling").update(f"C{USERS.index(str(message.author.id))+2}",RAW[USERS.index(str(message.author.id))][2])
 
 @client.event
 async def on_command_error(ctx, error):
@@ -89,7 +117,7 @@ async def leaderboard_cmd(ctx):
             ordered.append([await client.fetch_user(iden[index]),xps[index]])
             iden.pop(index)
             xps.pop(index)
-        print(ordered)
+        log(ordered)
         phr = [f"{i[0]}    `{i[1]}`" for i in ordered]
         embed = discord.Embed(
             title = "Global Leaderboard",
@@ -135,22 +163,19 @@ async def update_cooldown():
 async def upload_data():
     global XP_COUNT,USERS
     if XP_COUNT != {}:
+        start = time.time()
         sheet = SPREAD.worksheet("Leveling")
         USERS = sheet.col_values(1)
         cell_updates,new_count = [],0
-        start = time.time()
         for i in XP_COUNT:
-            if i in USERS:
-                cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=2,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
-            else:
-                cell_updates.append(gspread.models.Cell(row=len(USERS)+new_count+1,col=1,value=i))
-                cell_updates.append(gspread.models.Cell(row=len(USERS)+new_count+1,col=2,value=XP_COUNT[i]))
-                cell_updates.append(gspread.models.Cell(row=len(USERS)+new_count+1,col=3,value=1))
-                cell_updates.append(gspread.models.Cell(row=len(USERS)+new_count+1,col=4,value=datetime.datetime.now().strftime("%c")))
-                new_count+=1
+            cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=2,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
         sheet.update_cells(cell_updates)
         log("Uploaded Data!!!")
-        USERS = sheet.col_values(1)
+        RAW = sheet.get_all_values()[1:]
+        for i in range(len(RAW)):
+            RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
+        USERS = [i[0] for i in RAW]
+        USERS = [i[0] for i in RAW]
         code_fetch = random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])
         log(f"Fetched Information {code_fetch}!!!")
         XP_COUNT = {}
