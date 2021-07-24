@@ -94,10 +94,10 @@ async def on_message(message):
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
-        em = discord.Embed(title=f"Slow it down bro!",description=f"Try again in {error.retry_after:.2f}s.", color=discord.Colour.red())
+        em = discord.Embed(title=f"You or your Server is under Command Cooldown",description=f"Try again in {error.retry_after:.2f}s.", color=discord.Colour.red())
         await ctx.send(embed=em)
     else:
-        print(error)
+        raise error
 
 @client.command('check')
 async def check_command(ctx):
@@ -108,27 +108,32 @@ async def check_command(ctx):
     e = discord.Embed(title=f"Variable: `XP_COUNT` - Uploads every 5 Minutes",description=f"```\n{XP_COUNT}\n```")
     await ctx.send(embed=e)
 
+@client.command()
+async def ping(ctx):
+    await ctx.send(embed=discord.Embed(title=f"Latency: `{round(client.latency*100,4)}`ms"))
+
 @client.command(name="leaderboard",aliases=["lb"])
 @commands.cooldown(1, 30, commands.BucketType.guild)
 async def leaderboard_cmd(ctx):
     global USERNAMES
     start = time.time()
     async with ctx.typing():
-        iden,xps,level,ordered = USERNAMES.copy(),[i[1] for i in RAW],[i[2] for i in RAW],[]
+        iden,xps,level,joined,ordered = USERNAMES.copy(),[i[1] for i in RAW],[i[2] for i in RAW],[i[3] for i in RAW],[]
         await client.wait_until_ready()
-        while iden!=[] and xps!=[]:
+        while len(ordered)<10:
             index = xps.index(max(xps))
-            ordered.append([iden[index],xps[index],level[index]])
+            ordered.append([iden[index],xps[index],level[index],joined[index]])
             iden.pop(index)
             xps.pop(index)
             level.pop(index)
+            joined.pop(index)
         log(ordered)
         embed = discord.Embed(
             title = "Global Leaderboard",
             colour = discord.Colour.blurple()
-        ).set_footer(text=f"Generated in {round(time.time()-start,4)}")
+        ).set_footer(text=f"Generated in {round(time.time()-start,4)} Seconds. Enhanced Response time from Legacy.")
         for i in ordered[:10]:
-            embed.add_field(name=f"{ordered.index(i)}) {i[0]}",value=f"`{i[1]}`",inline=False)
+            embed.add_field(name=f"{ordered.index(i)+1}) `{i[1]}`\t**Level**: `{i[2]}`\t\t\t\t**{i[0]}**",value=f"Joined in {i[3]}",inline=False)
     await ctx.send(embed=embed)
 
 @client.command(aliases=['sb'])
@@ -146,12 +151,28 @@ async def superbroadcast(ctx):
             await ctx.send("Broadcast Successfully Sent!")
         else:
             await ctx.send("`Super Broadcast Cancelled.`")
+@client.command(name="level",aliases=["rank"])
+async def get_self(ctx):
+    if str(ctx.author.id) in USERS:
+        user_obj = RAW[USERS.index(str(ctx.author.id))]
+        e = discord.Embed(
+            title = f"{USERNAMES[USERS.index(str(ctx.author.id))]}'s Profile",
+            description = f"**Joined in**: `{user_obj[3]}`\n**Level**: `{user_obj[2]}`\nExperienced Points Gained: `{user_obj[1]}`",
+            colour = discord.Colour(0xd81b60)
+        ).set_footer(text=f"User ID: {user_obj[0]}")
+        await ctx.send(embed=e)
+    else:
+        await ctx.send("Say **Hi everyone** get your profile")
 
 @client.command()
 async def get_raw(ctx):
     if ctx.author.id == 591107669180284928:
+        phr = ""
         for i in RAW:
-            await ctx.send(i)
+            phr+=f"{i}\n"
+            if len(phr)>1000:
+                await ctx.send(phr)
+                phr = ""
 
 @tasks.loop(seconds=1)
 async def update_cooldown():
@@ -195,7 +216,7 @@ async def upload_data():
 
 @tasks.loop(seconds=5)
 async def change_p():
-    statuses = [f"{len(client.guilds)} Servers","you talk","Growtopia Leveling System"]
+    statuses = [f"{len(client.guilds)} Servers","you talk","Growtopia Leveling System",f"{len(USERNAMES)} Players"]
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(statuses)))
 
 @change_p.before_loop
@@ -208,4 +229,4 @@ bg_tasks = [update_cooldown,upload_data,change_p]
 for i in bg_tasks:
     i.start()
 
-client.run(os.getenv('token'))
+client.run("ODY2ODgwOTg1MjE4OTQwOTI4.YPY_1A.-tHP5DbgLlJeUOQ3lVxVbElXZd0")#os.getenv('token'))
