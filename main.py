@@ -136,7 +136,7 @@ async def superbroadcast(ctx):
     if ctx.author.id in [591107669180284928,852572302590607361]:
         await ctx.send(
             "Type in What You want to broadcast\n`Type cancel to force end`")
-        msg = await client.wait_for('message', check=lambda m:m.author.id == 591107669180284928)
+        msg = await client.wait_for('message', check=lambda m:m.author.id in [591107669180284928,852572302590607361])
         if msg.content != "" and msg.content != "cancel":
             for i in client.guilds:
               channel = i.system_channel
