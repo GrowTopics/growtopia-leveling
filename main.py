@@ -1,8 +1,11 @@
 import discord,os,gspread,time,socket,datetime,random
 from discord.ext import commands,tasks
 from oauth2client.service_account import ServiceAccountCredentials as sac
+from discord.utils import get
 
-client = commands.Bot(command_prefix="<!")
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix="<!",intents=intents)
 
 #Important Global Variables
 ON_COOLDOWN = {}
@@ -27,20 +30,20 @@ def log(text=""):
 
 @client.event
 async def on_ready():
-    global USERS,RAW
+    global USERS,RAW,USERNAMES
     log(f"Bot Already Online...Running on {socket.gethostname()}")
+    RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
+    for i in range(len(RAW)):
+        RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
+    USERS = [i[0] for i in RAW]
+    USERNAMES = [client.get_user(int(i)) for i in USERS]
+    log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
     if development == False:
         await client.get_channel(847602473627025448).send(embed=discord.Embed(
             title = "Bot Status",
             description = "Running on `%%hostname%%` at `%%datetime%%`".replace("%%hostname%%",socket.gethostname()).replace("%%datetime%%",datetime.datetime.now().strftime('%c')),
             colour = discord.Colour(0xd81b60)
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
-
-    RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
-    for i in range(len(RAW)):
-        RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
-    USERS = [i[0] for i in RAW]
-    log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
 
 @client.event
 async def on_message(message):
@@ -108,27 +111,29 @@ async def check_command(ctx):
 @client.command(name="leaderboard",aliases=["lb"])
 @commands.cooldown(1, 30, commands.BucketType.guild)
 async def leaderboard_cmd(ctx):
+    global USERNAMES
+    start = time.time()
     async with ctx.typing():
-        sheet = SPREAD.worksheet("Leveling")
-        iden,xps,ordered = list(map(int,sheet.col_values(1)[1:])),list(map(int,sheet.col_values(2)[1:])),[]
+        iden,xps,level,ordered = USERNAMES.copy(),[i[1] for i in RAW],[i[2] for i in RAW],[]
         await client.wait_until_ready()
         while iden!=[] and xps!=[]:
             index = xps.index(max(xps))
-            ordered.append([await client.fetch_user(iden[index]),xps[index]])
+            ordered.append([iden[index],xps[index],level[index]])
             iden.pop(index)
             xps.pop(index)
+            level.pop(index)
         log(ordered)
-        phr = [f"{i[0]}    `{i[1]}`" for i in ordered]
         embed = discord.Embed(
             title = "Global Leaderboard",
-            description = "\n".join(phr),
             colour = discord.Colour.blurple()
-        )
+        ).set_footer(text=f"Generated in {round(time.time()-start,4)}")
+        for i in ordered[:10]:
+            embed.add_field(name=f"{ordered.index(i)}) {i[0]}",value=f"`{i[1]}`",inline=False)
     await ctx.send(embed=embed)
 
 @client.command(aliases=['sb'])
 async def superbroadcast(ctx):
-    if ctx.author.id == 591107669180284928:
+    if ctx.author.id in [591107669180284928,852572302590607361]:
         await ctx.send(
             "Type in What You want to broadcast\n`Type cancel to force end`")
         msg = await client.wait_for('message', check=lambda m:m.author.id == 591107669180284928)
@@ -141,6 +146,12 @@ async def superbroadcast(ctx):
             await ctx.send("Broadcast Successfully Sent!")
         else:
             await ctx.send("`Super Broadcast Cancelled.`")
+
+@client.command()
+async def get_raw(ctx):
+    if ctx.author.id == 591107669180284928:
+        for i in RAW:
+            await ctx.send(i)
 
 @tasks.loop(seconds=1)
 async def update_cooldown():
@@ -161,7 +172,7 @@ async def update_cooldown():
 
 @tasks.loop(minutes=upload_interval)
 async def upload_data():
-    global XP_COUNT,USERS
+    global XP_COUNT,USERS,USERNAMES
     if XP_COUNT != {}:
         start = time.time()
         sheet = SPREAD.worksheet("Leveling")
@@ -175,12 +186,12 @@ async def upload_data():
         for i in range(len(RAW)):
             RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
         USERS = [i[0] for i in RAW]
-        USERS = [i[0] for i in RAW]
         code_fetch = random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])
         log(f"Fetched Information {code_fetch}!!!")
         XP_COUNT = {}
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
         await client.get_channel(867533836803244042).send(embed=e)
+        USERNAMES = [await client.fetch_user(i) for i in USERS]
 
 @tasks.loop(seconds=5)
 async def change_p():
