@@ -229,4 +229,4 @@ bg_tasks = [update_cooldown,upload_data,change_p]
 for i in bg_tasks:
     i.start()
 
-client.run(os.getenv('token'))
+client.run("ODY2ODgwOTg1MjE4OTQwOTI4.YPY_1A.-tHP5DbgLlJeUOQ3lVxVbElXZd0")#os.getenv('token'))
