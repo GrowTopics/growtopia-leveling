@@ -170,10 +170,15 @@ async def superbroadcast(ctx):
         msg = await client.wait_for('message', check=lambda m:m.author.id == ctx.author.id)
         if msg.content != "" and msg.content != "cancel":
             for i in client.guilds:
-              channel = i.system_channel
-              await channel.send(
-                        f"**Super Broadcast**\n{msg.content}\n\n*By my creator The UKNOWN...*"
-                    )
+                channel = i.system_channel
+                try:
+                  await channel.send(embed = discord.Embed(
+                    title = "Super Broadcast",
+                    description = ctx.message.content,
+                    colour = discord.Colour(0xd81b60)
+                  ).set_footer(text="By this Bot's Maker..."))
+                except:
+                    log(f"{i.name} does not have suffcient perms!")
             await ctx.send("Broadcast Successfully Sent!")
         else:
             await ctx.send("`Super Broadcast Cancelled.`")
