@@ -30,30 +30,34 @@ def log(text=""):
 
 #Self Healing
 async def self_healing():
+    log("Initiate Self Healing")
     sheet = SPREAD.worksheet("Leveling")
     to_delete = []
     column1 = sheet.col_values(1).copy()
+    log(column1)
     for i in range(len(column1)):
-        if column1[i].endswith("00"):
+        if "E" in column1[i]:
             to_delete.append(i+1)
             await client.get_channel(847602473627025448).send(embed=discord.Embed(title="Self Fixing has Found a Faulty ID",description=f"**Deleted row** `{i+1}`\nFaulty ID: `{column1[i]}`"))
     for i in to_delete:
+        log(f"Deleting {i}")
         sheet.delete_rows(i)
 
 @client.event
 async def on_ready():
     global USERS,RAW,USERNAMES
     log(f"Bot Already Online...Running on {socket.gethostname()}")
-    RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
-    for i in range(len(RAW)):
-        RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
-    USERS = [i[0] for i in RAW]
     while True:
+        RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
+        for i in range(len(RAW)):
+            RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
+        USERS = [i[0] for i in RAW]
         USERNAMES = []
         for i in USERS:
             try:
                 USERNAMES = [client.get_user(int(i)) for i in USERS]
             except Exception as e:
+                print("\n\nException>>",e)
                 # Execute Self Healing Protocol
                 await self_healing()
                 continue
@@ -249,6 +253,8 @@ async def upload_data():
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
         await client.get_channel(867533836803244042).send(embed=e)
         while True:
+            sheet = SPREAD.worksheet("Leveling")
+            USERS = sheet.col_values(1)[1:]
             USERNAMES = []
             for i in USERS:
                 try:
@@ -256,6 +262,7 @@ async def upload_data():
                     USERNAMES.append(user.name)
                     log(user)
                 except Exception as e:
+                    print("\n\nException>>",e)
                     # Execute Self Healing Protocol
                     await self_healing()
                     continue
