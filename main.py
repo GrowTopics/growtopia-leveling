@@ -54,12 +54,6 @@ async def on_message(message):
         if str(message.author.id) not in ON_COOLDOWN and not(message.author.bot) and len(message.content.split(" "))>1:
 
             if str(message.author.id) not in USERS:
-                e = discord.Embed(
-                    title = f"Welcome {message.author.name}!",
-                    description = "Participating in conversations help you level up.\nSpam Detection has been enabled - Don't try it",
-                    colour = discord.Colour.green()
-                )
-#                await message.author.send(embed=e)
                 timenow = datetime.datetime.now().strftime("%c")
                 new_user = [
                     gspread.models.Cell(row=len(USERS)+1,col=1,value=message.author.id),
@@ -141,7 +135,7 @@ async def superbroadcast(ctx):
     if ctx.author.id in [591107669180284928,852572302590607361]:
         await ctx.send(
             "Type in What You want to broadcast\n`Type cancel to force end`")
-        msg = await client.wait_for('message', check=lambda m:m.author.id in [591107669180284928,852572302590607361])
+        msg = await client.wait_for('message', check=lambda m:m.author.id == ctx.author.id)
         if msg.content != "" and msg.content != "cancel":
             for i in client.guilds:
               channel = i.system_channel
@@ -157,7 +151,7 @@ async def get_self(ctx):
         user_obj = RAW[USERS.index(str(ctx.author.id))]
         e = discord.Embed(
             title = f"{USERNAMES[USERS.index(str(ctx.author.id))]}'s Profile",
-            description = f"**Joined in**: `{user_obj[3]}`\n**Level**: `{user_obj[2]}`\nExperienced Points Gained: `{user_obj[1]}`",
+            description = f"**Joined in**: `{user_obj[3]}`\n**Level**: `{user_obj[2]}`\nEXP: `{user_obj[1]}`",
             colour = discord.Colour(0xd81b60)
         ).set_footer(text=f"User ID: {user_obj[0]}")
         await ctx.send(embed=e)
@@ -195,10 +189,12 @@ async def update_cooldown():
 async def force_upload(ctx):
     if ctx.author.id == 591107669180284928:
         async with ctx.typing():
+            start = time.time()
             p = await ctx.send("Uploading Data Forcefully...")
             await upload_data()
             TO_Next = upload_interval*60
-        await p.edit("✅ Uploaded Data")
+        await p.delete()
+        await ctx.send(f"✅ Uploaded Data in `{round(time.time()-start,4)} Seconds`")
 
 @tasks.loop(minutes=upload_interval)
 async def upload_loop():
@@ -224,8 +220,16 @@ async def upload_data():
         XP_COUNT = {}
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
         await client.get_channel(867533836803244042).send(embed=e)
-        USERNAMES = [await client.fetch_user(i) for i in USERS]
-
+        USERNAMES = []
+        for i in USERS:
+            try:
+                user = await client.fetch_user(i)
+                USERNAMES.append(user.name)
+                log(user)
+            except Exception as e:
+                log(f"User Not Found ({i})\n{e}")
+        log(f"Loaded Usernames\n{USERNAMES}")
+        log(f"Loaded USERS:\n{USERNAMES}\nRAW:\n{RAW}")
 @tasks.loop(seconds=5)
 async def change_p():
     statuses = [f"{len(client.guilds)} Servers","you talk","Growtopia Leveling System",f"{len(USERNAMES)} Players"]
