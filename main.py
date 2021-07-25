@@ -28,6 +28,18 @@ def log(text=""):
     if development == True:
         print(text)
 
+#Self Healing
+async def self_healing():
+    sheet = SPREAD.worksheet("Leveling")
+    to_delete = []
+    column1 = sheet.col_values(1).copy()
+    for i in range(len(column1)):
+        if column1[i].endswith("00"):
+            to_delete.append(i+1)
+            await client.get_channel(847602473627025448).send(embed=discord.Embed(title="Self Fixing has Found a Faulty ID",description=f"**Deleted row** `{i+1}`\nFaulty ID: `{column1[i]}`"))
+    for i in to_delete:
+        sheet.delete_rows(i)
+
 @client.event
 async def on_ready():
     global USERS,RAW,USERNAMES
@@ -36,7 +48,17 @@ async def on_ready():
     for i in range(len(RAW)):
         RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
     USERS = [i[0] for i in RAW]
-    USERNAMES = [client.get_user(int(i)) for i in USERS]
+    while True:
+        USERNAMES = []
+        for i in USERS:
+            try:
+                USERNAMES = [client.get_user(int(i)) for i in USERS]
+            except Exception as e:
+                # Execute Self Healing Protocol
+                await self_healing()
+                continue
+        break
+
     log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
     if development == False:
         await client.get_channel(847602473627025448).send(embed=discord.Embed(
@@ -61,6 +83,12 @@ async def on_message(message):
                     gspread.models.Cell(row=len(USERS)+1,col=3,value=1),
                     gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
                 ]
+                await client.get_channel(847602473627025448).send(embed=discord.Embed(
+                    title = "New User",
+                    description = "".join(list(map(str,new_user))),
+                    colour = discord.Colour.orange()
+                ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
+
                 RAW.append([str(message.author.id),0,1,timenow])
                 SPREAD.worksheet("Leveling").update_cells(new_user)
                 USERS.append(str(message.author.id))
@@ -220,14 +248,19 @@ async def upload_data():
         XP_COUNT = {}
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
         await client.get_channel(867533836803244042).send(embed=e)
-        USERNAMES = []
-        for i in USERS:
-            try:
-                user = await client.fetch_user(i)
-                USERNAMES.append(user.name)
-                log(user)
-            except Exception as e:
-                log(f"User Not Found ({i})\n{e}")
+        while True:
+            USERNAMES = []
+            for i in USERS:
+                try:
+                    user = await client.fetch_user(i)
+                    USERNAMES.append(user.name)
+                    log(user)
+                except Exception as e:
+                    # Execute Self Healing Protocol
+                    await self_healing()
+                    continue
+            break
+
         log(f"Loaded Usernames\n{USERNAMES}")
         log(f"Loaded USERS:\n{USERNAMES}\nRAW:\n{RAW}")
 @tasks.loop(seconds=5)
