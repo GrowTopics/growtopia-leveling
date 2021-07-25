@@ -59,7 +59,7 @@ async def on_message(message):
                     description = "Participating in conversations help you level up.\nSpam Detection has been enabled - Don't try it",
                     colour = discord.Colour.green()
                 )
-                await message.author.send(embed=e)
+#                await message.author.send(embed=e)
                 timenow = datetime.datetime.now().strftime("%c")
                 new_user = [
                     gspread.models.Cell(row=len(USERS)+1,col=1,value=message.author.id),
