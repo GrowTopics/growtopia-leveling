@@ -191,7 +191,19 @@ async def update_cooldown():
     if TO_Next == 0:
         TO_Next = upload_interval*60
 
+@client.command()
+async def force_upload(ctx):
+    if ctx.author.id == 591107669180284928:
+        async with ctx.typing():
+            p = await ctx.send("Uploading Data Forcefully...")
+            await upload_data()
+            TO_Next = upload_interval*60
+        await p.edit("✅ Uploaded Data")
+
 @tasks.loop(minutes=upload_interval)
+async def upload_loop():
+    await upload_data()
+
 async def upload_data():
     global XP_COUNT,USERS,USERNAMES
     if XP_COUNT != {}:
@@ -225,8 +237,8 @@ async def check_ready():
     await client.wait_until_ready()
 
 #Run Background tasks
-bg_tasks = [update_cooldown,upload_data,change_p]
+bg_tasks = [update_cooldown,upload_loop,change_p]
 for i in bg_tasks:
     i.start()
 
-client.run("ODY2ODgwOTg1MjE4OTQwOTI4.YPY_1A.-tHP5DbgLlJeUOQ3lVxVbElXZd0")#os.getenv('token'))
+client.run(os.getenv('token'))
