@@ -174,7 +174,7 @@ async def superbroadcast(ctx):
                 try:
                   await channel.send(embed = discord.Embed(
                     title = "Super Broadcast",
-                    description = ctx.message.content,
+                    description = msg.content,
                     colour = discord.Colour(0xd81b60)
                   ).set_footer(text="By this Bot's Maker..."))
                 except:
