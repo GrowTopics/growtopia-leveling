@@ -75,7 +75,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global USERS,RAW
+    global USERS,RAW,USERNAMES
     if message.content.startswith("<!"):
         await client.process_commands(message)
     else:
@@ -83,11 +83,12 @@ async def on_message(message):
 
             if str(message.author.id) not in USERS:
                 timenow = datetime.datetime.now().strftime("%c")
+                last_user_index = len(SPREAD.worksheet("Leveling").col_values(1))
                 new_user = [
-                    gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
-                    gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
-                    gspread.models.Cell(row=len(USERS)+1,col=3,value=1),
-                    gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
+                    gspread.models.Cell(row=len(last_user_index)+1,col=1,value=str(message.author.id)),
+                    gspread.models.Cell(row=len(last_user_index)+1,col=2,value=0),
+                    gspread.models.Cell(row=len(last_user_index)+1,col=3,value=1),
+                    gspread.models.Cell(row=len(last_user_index)+1,col=4,value=timenow)
                 ]
                 await client.get_channel(847602473627025448).send(embed=discord.Embed(
                     title = "New User",
@@ -98,6 +99,7 @@ async def on_message(message):
                 RAW.append([str(message.author.id),0,1,timenow])
                 SPREAD.worksheet("Leveling").update_cells(new_user)
                 USERS.append(str(message.author.id))
+                USERNAMES.append(message.author.name)
 
             ON_COOLDOWN[str(message.author.id)] = points_award_cooldown
 
