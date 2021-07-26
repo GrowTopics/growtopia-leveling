@@ -43,25 +43,27 @@ async def self_healing():
         log(f"Deleting {i}")
         sheet.delete_rows(i)
 
-@client.event
-async def on_ready():
+# Intitalize
+async def initialiaze_info():
     global USERS,RAW,USERNAMES
-    log(f"Bot Already Online...Running on {socket.gethostname()}")
     while True:
         RAW = SPREAD.worksheet("Leveling").get_all_values()[1:]
         for i in range(len(RAW)):
             RAW[i][1],RAW[i][2] = int(RAW[i][1]),int(RAW[i][2])
         USERS = [i[0] for i in RAW]
-        USERNAMES = []
-        for i in USERS:
-            try:
-                USERNAMES = [client.get_user(int(i)) for i in USERS]
-            except Exception as e:
-                print("\n\nException>>",e)
-                # Execute Self Healing Protocol
-                await self_healing()
-                continue
+        try:
+            USERNAMES = [client.get_user(int(i)) for i in USERS]
+        except Exception as e:
+            print("\n\nException>>",e)
+            # Execute Self Healing Protocol
+            await self_healing()
+            continue
         break
+
+@client.event
+async def on_ready():
+    log(f"Bot Already Online...Running on {socket.gethostname()}")
+    await initialiaze_info()
 
     log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
     if development == False:
@@ -82,7 +84,7 @@ async def on_message(message):
             if str(message.author.id) not in USERS:
                 timenow = datetime.datetime.now().strftime("%c")
                 new_user = [
-                    gspread.models.Cell(row=len(USERS)+1,col=1,value=message.author.id),
+                    gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
                     gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
                     gspread.models.Cell(row=len(USERS)+1,col=3,value=1),
                     gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
@@ -115,7 +117,7 @@ async def on_message(message):
                     colour = discord.Colour.teal()
                 )
                 await message.channel.send(embed=e)
-                SPREAD.worksheet("Leveling").update(f"C{USERS.index(str(message.author.id))+2}",RAW[USERS.index(str(message.author.id))][2])
+                SPREAD.worksheet("Leveling").update(f"C{USERS.index(str(message.author.id))+2}",f"'{RAW[USERS.index(str(message.author.id))][2]}'")
 
 @client.event
 async def on_command_error(ctx, error):
