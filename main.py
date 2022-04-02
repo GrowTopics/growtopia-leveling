@@ -249,7 +249,7 @@ async def upload_data():
         USERS = sheet.col_values(1)
         cell_updates,new_count = [],0
         for i in XP_COUNT:
-            cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=2,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
+            cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=1,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
         sheet.update_cells(cell_updates)
         log("Uploaded Data!!!")
         RAW = sheet.get_all_values()[1:]
