@@ -74,11 +74,12 @@ async def on_ready():
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
 @client.event(name="hi",aliases=["hello"]
-async def on_message(message):
-    global USERS,RAW,USERNAMES
-    if message.content.startswith("<!"):
-        await client.process_commands(message)
-    else:
+async def check_command(ctx):
+# async def on_message(message):
+#     global USERS,RAW,USERNAMES
+#     if message.content.startswith("<!"):
+#         await client.process_commands(message)
+#     else:
         if str(message.author.id) not in ON_COOLDOWN and not(message.author.bot) and len(message.content.split(" "))>1:
 
             if str(message.author.id) not in USERS:
