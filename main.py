@@ -73,7 +73,7 @@ async def on_ready():
             colour = discord.Colour(0xd81b60)
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
-@client.event(name="hello",aliases=["hi"])
+@client.command(name="hello",aliases=["hi"])
 async def hello_command(ctx):
 # async def on_message(message):
 #     global USERS,RAW,USERNAMES
