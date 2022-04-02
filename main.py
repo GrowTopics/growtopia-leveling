@@ -38,7 +38,7 @@ async def self_healing():
     for i in range(len(column1)):
         if "E" in column1[i]:
             to_delete.append(i+1)
-            await client.get_channel(847602473627025448).send(embed=discord.Embed(title="Self Fixing has Found a Faulty ID",description=f"**Deleted row** `{i+1}`\nFaulty ID: `{column1[i]}`"))
+            await client.get_channel(959668973908135948).send(embed=discord.Embed(title="Self Fixing has Found a Faulty ID",description=f"**Deleted row** `{i+1}`\nFaulty ID: `{column1[i]}`"))
     for i in to_delete:
         log(f"Deleting {i}")
         sheet.delete_rows(i)
@@ -67,7 +67,7 @@ async def on_ready():
 
     log(f"Fetched Information {random.choice(['Alpha','Bravo','Charlie','Delta','Echo','Foxtrot','Golf','Hotel','India','Juliet'])}!!!")
     if development == False:
-        await client.get_channel(847602473627025448).send(embed=discord.Embed(
+        await client.get_channel(959668973908135948).send(embed=discord.Embed(
             title = "Bot Status",
             description = "Running on `%%hostname%%` at `%%datetime%%`".replace("%%hostname%%",socket.gethostname()).replace("%%datetime%%",datetime.datetime.now().strftime('%c')),
             colour = discord.Colour(0xd81b60)
@@ -90,7 +90,7 @@ async def on_message(message):
                     gspread.models.Cell(row=len(last_user_index)+1,col=3,value=1),
                     gspread.models.Cell(row=len(last_user_index)+1,col=4,value=timenow)
                 ]
-                await client.get_channel(847602473627025448).send(embed=discord.Embed(
+                await client.get_channel(959668973908135948).send(embed=discord.Embed(
                     title = "New User",
                     description = "".join(list(map(str,new_user))),
                     colour = discord.Colour.orange()
@@ -168,7 +168,7 @@ async def leaderboard_cmd(ctx):
 
 @client.command(aliases=['sb'])
 async def superbroadcast(ctx):
-    if ctx.author.id in [591107669180284928,852572302590607361]:
+    if ctx.author.id not in [852572302590607361,591107669180284928,309301527934140418]:
         await ctx.send(
             "Type in What You want to broadcast\n`Type cancel to force end`")
         msg = await client.wait_for('message', check=lambda m:m.author.id == ctx.author.id)
@@ -201,7 +201,7 @@ async def get_self(ctx):
 
 @client.command()
 async def get_raw(ctx):
-    if ctx.author.id == 591107669180284928:
+    if ctx.author.id not in [852572302590607361,591107669180284928,309301527934140418]:
         phr = ""
         for i in RAW:
             phr+=f"{i}\n"
@@ -228,7 +228,7 @@ async def update_cooldown():
 
 @client.command()
 async def force_upload(ctx):
-    if ctx.author.id in [591107669180284928,852572302590607361]:
+    if ctx.author.id not in [852572302590607361,591107669180284928,309301527934140418]:
         async with ctx.typing():
             start = time.time()
             p = await ctx.send("Uploading Data Forcefully...")
