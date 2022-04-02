@@ -74,7 +74,7 @@ async def on_ready():
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
 @client.event(name="hi",aliases=["hello"]
-async def check_command(ctx):
+async def hi_command(ctx):
 # async def on_message(message):
 #     global USERS,RAW,USERNAMES
 #     if message.content.startswith("<!"):
