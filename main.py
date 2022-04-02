@@ -197,7 +197,7 @@ async def get_self(ctx):
         ).set_footer(text=f"User ID: {user_obj[0]}")
         await ctx.send(embed=e)
     else:
-        await ctx.send("Say **Hi everyone** get your profile")
+        await ctx.send("Say \"**Hi everyone**\" to get your profile!")
 
 @client.command()
 async def get_raw(ctx):
