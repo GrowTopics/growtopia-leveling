@@ -75,7 +75,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global USERS,RAW#,USERNAMES
+    global USERS,RAW,USERNAMES
     if message.content.startswith("<!"):
         await client.process_commands(message)
     else:
@@ -99,7 +99,7 @@ async def on_message(message):
                 RAW.append([str(message.author.id),0,1,timenow])
                 SPREAD.worksheet("Leveling").update_cells(new_user)
                 USERS.append(str(message.author.id))
-#                 USERNAMES.append(message.author.name)
+                 USERNAMES.append(message.author.name)
 
             ON_COOLDOWN[str(message.author.id)] = points_award_cooldown
 
