@@ -73,13 +73,12 @@ async def on_ready():
             colour = discord.Colour(0xd81b60)
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
-@client.command(name="hello",aliases=["hi"])
-async def hello_command(ctx):
-# async def on_message(message):
-#     global USERS,RAW,USERNAMES
-#     if message.content.startswith("<!"):
-#         await client.process_commands(message)
-#     else:
+@client.event
+async def on_message(message):
+    global USERS,RAW,USERNAMES
+    if message.content.startswith("<!"):
+        await client.process_commands(message)
+    else:
         if str(message.author.id) not in ON_COOLDOWN and not(message.author.bot) and len(message.content.split(" "))>1:
 
             if str(message.author.id) not in USERS:
