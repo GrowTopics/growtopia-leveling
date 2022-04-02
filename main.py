@@ -17,12 +17,12 @@ google_client = gspread.authorize(creds)
 SPREAD = google_client.open_by_key("1KTrNOXZXdbOg9rALPxxkys5jEDU-cOuzOB_jtJEDpbg")
 
 points_per_msg = random.choice(list(range(5,15)))
-upload_interval = 10    #Minutes
+upload_interval = 5    #Minutes
 points_award_cooldown = 10
 xp_levelup = list(map(int,SPREAD.worksheet("Settings").row_values(2)))
 
 TO_Next = upload_interval*60
-development = False     #Set to False when pushing
+development = True     #Set to False when pushing
 
 def log(text=""):
     if development == True:
