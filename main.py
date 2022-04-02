@@ -73,7 +73,7 @@ async def on_ready():
             colour = discord.Colour(0xd81b60)
         ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
 
-@client.event
+@client.event(name="hi",aliases=["hello"]
 async def on_message(message):
     global USERS,RAW,USERNAMES
     if message.content.startswith("<!"):
