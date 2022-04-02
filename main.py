@@ -192,9 +192,9 @@ async def get_self(ctx):
         user_obj = RAW[USERS.index(str(ctx.author.id))]
         e = discord.Embed(
             title = f"{USERNAMES[USERS.index(str(ctx.author.id))]}'s Profile",
-            description = f"**Joined in**: `{user_obj[3]}`\n**Level**: `{user_obj[2]}`\nEXP: `{user_obj[1]}`",
+            description = f"**Level**: `{user_obj[2]}`\n**EXP**: `{user_obj[1]}`",
             colour = discord.Colour(0xd81b60)
-        ).set_footer(text=f"User ID: {user_obj[0]}")
+        ).set_footer(text=f"Bot Created By: Static Bot Network")
         await ctx.send(embed=e)
     else:
         await ctx.send("Say \"**Hi everyone**\" to get your profile!")
