@@ -226,7 +226,7 @@ async def update_cooldown():
     if TO_Next == 0:
         TO_Next = upload_interval*60
 
-@client.command()
+@client.command(name="force_upload",aliases=["upload"])
 async def force_upload(ctx):
     if ctx.author.id not in [852572302590607361,591107669180284928,309301527934140418]:
         async with ctx.typing():
