@@ -5,7 +5,7 @@ from discord.utils import get
 
 intents = discord.Intents.default()
 intents.members = True
-client = commands.Bot(command_prefix="==",intents=intents)
+client = commands.Bot(command_prefix="<!",intents=intents)
 
 #Important Global Variables
 ON_COOLDOWN = {}
