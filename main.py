@@ -112,14 +112,14 @@ async def on_message(message):
 
             #Check if Level Up
 
-#             if RAW[USERS.index(str(message.author.id))][1] >= xp_levelup[RAW[USERS.index(str(message.author.id))][2]+1]:
-#                 RAW[USERS.index(str(message.author.id))][2] = RAW[USERS.index(str(message.author.id))][2]+1
-                e = discord.Embed(
-                    title = f"**Congratulations** {message.author.name}!\nYou have Reached **LEVEL** `{RAW[USERS.index(str(message.author.id))][2]}`\n🥳 🥳 🥳",
-                    colour = discord.Colour.teal()
-                )
-                await message.channel.send(embed=e)
-                SPREAD.worksheet("Leveling").update(f"C{USERS.index(str(message.author.id))+2}",f"'{RAW[USERS.index(str(message.author.id))][2]}'")
+#              if RAW[USERS.index(str(message.author.id))][1] >= xp_levelup[RAW[USERS.index(str(message.author.id))][2]+1]:
+#                  RAW[USERS.index(str(message.author.id))][2] = RAW[USERS.index(str(message.author.id))][2]+1
+#                 e = discord.Embed(
+#                     title = f"**Congratulations** {message.author.name}!\nYou have Reached **LEVEL** `{RAW[USERS.index(str(message.author.id))][2]}`\n🥳 🥳 🥳",
+#                     colour = discord.Colour.teal()
+#                 )
+#                 await message.channel.send(embed=e)
+#                 SPREAD.worksheet("Leveling").update(f"C{USERS.index(str(message.author.id))+2}",f"'{RAW[USERS.index(str(message.author.id))][2]}'")
 
 @client.event
 async def on_command_error(ctx, error):
