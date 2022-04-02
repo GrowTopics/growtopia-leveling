@@ -260,7 +260,7 @@ async def upload_data():
         log(f"Fetched Information {code_fetch}!!!")
         XP_COUNT = {}
         e = discord.Embed(title="Upload Data",description="\n".join(map(str,cell_updates)),colour=discord.Colour(0x232323)).set_footer(text=f"Uploaded in {time.time()-start} seconds. Fetched information {code_fetch}")
-        await client.get_channel(867533836803244042).send(embed=e)
+        await client.get_channel(959668973908135948).send(embed=e)
         while True:
             sheet = SPREAD.worksheet("Leveling")
             USERS = sheet.col_values(1)[1:]
@@ -281,7 +281,7 @@ async def upload_data():
         log(f"Loaded USERS:\n{USERNAMES}\nRAW:\n{RAW}")
 @tasks.loop(seconds=5)
 async def change_p():
-    statuses = [f"{len(client.guilds)} Servers with {len(client.users)} Users!","You Talk!","The Static Leveling System!","Created by Static Bot Network",f"{len(USERNAMES)} Verified Players!"]
+    statuses = [f"{len(client.guilds)} Servers with {len(client.users)} Users!","You Talk!","The Static Leveling System!","The Static Bot Network",f"{len(USERNAMES)} Verified Players!"]
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(statuses)))
 
 @change_p.before_loop
