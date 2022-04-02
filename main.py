@@ -228,7 +228,7 @@ async def update_cooldown():
 
 @client.command()
 async def force_upload(ctx):
-    if ctx.author.id == 591107669180284928:
+    if ctx.author.id in [591107669180284928,852572302590607361]:
         async with ctx.typing():
             start = time.time()
             p = await ctx.send("Uploading Data Forcefully...")
