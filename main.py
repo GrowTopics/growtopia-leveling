@@ -22,7 +22,7 @@ points_award_cooldown = 10
 xp_levelup = list(map(int,SPREAD.worksheet("Settings").row_values(2)))
 
 TO_Next = upload_interval*60
-development = True     #Set to False when pushing
+development = False     #Set to False when pushing
 
 def log(text=""):
     if development == True:
