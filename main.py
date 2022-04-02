@@ -180,7 +180,7 @@ async def superbroadcast(ctx):
                     title = "Super Broadcast",
                     description = msg.content,
                     colour = discord.Colour(0xd81b60)
-                  ).set_footer(text="By this Bot's Maker..."))
+                  ).set_footer(text="Message From Static Bot Network!"))
                 except:
                     log(f"{i.name} does not have suffcient perms!")
             await ctx.send("Broadcast Successfully Sent!")
