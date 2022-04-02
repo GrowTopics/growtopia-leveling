@@ -83,7 +83,7 @@ async def on_message(message):
 
             if str(message.author.id) not in USERS:
                 timenow = datetime.datetime.now().strftime("%c")
-                last_user_index = len(SPREAD.worksheet("Leveling")).col_values(1))
+                last_user_index = len(SPREAD.worksheet("Leveling").col_values(1))
                 new_user = [
                     gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
                     gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
