@@ -85,10 +85,10 @@ async def on_message(message):
                 timenow = datetime.datetime.now().strftime("%c")
 #                 last_user_index = len(SPREAD.worksheet("Leveling").col_values(1))
                 new_user = [
-                    gspread.models.Cell(row=len(last_user_index)+1,col=1,value=str(message.author.id)),
-                    gspread.models.Cell(row=len(last_user_index)+1,col=2,value=0),
-                    gspread.models.Cell(row=len(last_user_index)+1,col=3,value=1),
-                    gspread.models.Cell(row=len(last_user_index)+1,col=4,value=timenow)
+                    gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
+                    gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
+                    gspread.models.Cell(row=len(USERS)+1,col=3,value=1),
+                    gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
                 ]
                 await client.get_channel(959668973908135948).send(embed=discord.Embed(
                     title = "New User",
