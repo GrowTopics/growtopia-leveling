@@ -112,8 +112,8 @@ async def on_message(message):
 
             #Check if Level Up
 
-            if RAW[USERS.index(str(message.author.id))][1] >= xp_levelup[RAW[USERS.index(str(message.author.id))][2]+1]:
-                RAW[USERS.index(str(message.author.id))][2] = RAW[USERS.index(str(message.author.id))][2]+1
+#             if RAW[USERS.index(str(message.author.id))][1] >= xp_levelup[RAW[USERS.index(str(message.author.id))][2]+1]:
+#                 RAW[USERS.index(str(message.author.id))][2] = RAW[USERS.index(str(message.author.id))][2]+1
                 e = discord.Embed(
                     title = f"**Congratulations** {message.author.name}!\nYou have Reached **LEVEL** `{RAW[USERS.index(str(message.author.id))][2]}`\n🥳 🥳 🥳",
                     colour = discord.Colour.teal()
@@ -249,7 +249,7 @@ async def upload_data():
         USERS = sheet.col_values(1)
         cell_updates,new_count = [],0
         for i in XP_COUNT:
-            cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=1,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
+            cell_updates.append(gspread.models.Cell(row=USERS.index(i)+1,col=2,value=int(sheet.acell(f"B{USERS.index(i)+1}").value)+XP_COUNT[i]))
         sheet.update_cells(cell_updates)
         log("Uploaded Data!!!")
         RAW = sheet.get_all_values()[1:]
