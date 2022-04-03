@@ -107,7 +107,7 @@ async def on_message(message):
                     colour = discord.Colour.orange()
                 ).set_footer(text="Server Time Now: %%server_time%%".replace("%%server_time%%",datetime.datetime.now().strftime("%H:%M:%S"))))
                 RAW.append([str(message.author.id),0,1,timenow])
-                SPREAD.worksheet("Leveling").update_cells(new_user)
+                SPREAD.worksheet("Leveling").update_cells(new_user,value_input_option='USER_ENTERED')
                 USERS.append(str(message.author.id))
                 USERNAMES.append(message.author.name)
             ON_COOLDOWN[str(message.author.id)] = points_award_cooldown
