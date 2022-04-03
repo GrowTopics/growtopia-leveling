@@ -98,7 +98,7 @@ async def on_message(message):
                 new_user = [
                     gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
                     gspread.models.Cell(row=len(USERS)+1,col=2,value=0),
-                    gspread.models.Cell(row=len(USERS)+1,col=3,value='=HLOOKUP(B10,Settings!$A$1:$Z$2,2,TRUE)'),
+                    gspread.models.Cell(row=len(USERS)+1,col=3,value=f'=HLOOKUP(B{len(USERS)+1},Settings!$A$1:$Z$2,2,TRUE)'),
                     gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
                 ]
                 await client.get_channel(959668973908135948).send(embed=discord.Embed(
