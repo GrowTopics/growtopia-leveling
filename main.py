@@ -143,7 +143,7 @@ async def check_command(ctx):
         return
     e = discord.Embed(title=f"Variable: `ON_COOLDOWN`",description=f"```\n{ON_COOLDOWN}\n```").set_footer(text=f"{TO_Next} seconds till next upload")
     await ctx.send(embed=e)
-    e = discord.Embed(title=f"Variable: `XP_COUNT` - Uploads every 5 Minutes",description=f"```\n{XP_COUNT}\n```")
+    e = discord.Embed(title=f"Variable: `XP_COUNT` - Uploads every 1 Minute",description=f"```\n{XP_COUNT}\n```")
     await ctx.send(embed=e)
 
 @client.command()
