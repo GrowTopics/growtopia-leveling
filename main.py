@@ -97,7 +97,7 @@ async def on_message(message):
                 last_user_index = len(SPREAD.worksheet("Leveling").col_values(1))
                 new_user = [
                     gspread.models.Cell(row=len(USERS)+1,col=1,value=str(message.author.id)),
-                    gspread.models.Cell(row=len(USERS)+1,col=2,value=10),
+                    gspread.models.Cell(row=len(USERS)+1,col=2,value=1),
                     gspread.models.Cell(row=len(USERS)+1,col=3,value=f'=HLOOKUP(B{len(USERS)+1},Settings!$A$1:$Z$2,2,TRUE)'),
                     gspread.models.Cell(row=len(USERS)+1,col=4,value=timenow)
                 ]
